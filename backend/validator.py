@@ -4,20 +4,9 @@ from urllib.parse import urlparse
 logger = logging.getLogger(__name__)
 
 class Validator:
-    """Validates user inputs and URLs to prevent injection or invalid processing."""
     
     @staticmethod
     def validate_gateway(url: str) -> dict:
-        """
-        Validates the URL format and accessibility.
-        
-        Args:
-            url (str): The URL to validate.
-            
-        Returns:
-            dict: {"valid": bool, "error": Optional[str]}
-        """
-        # 1. Format Validation
         if not url:
             return {"valid": False, "error": "URL cannot be empty."}
             
@@ -28,7 +17,6 @@ class Validator:
         except Exception:
             return {"valid": False, "error": "Malformed URL."}
 
-        # 2. Network Reachability Validation
         try:
             from config import Config
             import requests
@@ -36,14 +24,12 @@ class Validator:
             headers = {"User-Agent": Config.USER_AGENT}
             response = requests.get(url, timeout=Config.REQUEST_TIMEOUT, headers=headers)
             
-            # Status Code Check
             if response.status_code != 200:
                 return {
                     "valid": False, 
                     "error": f"Website unreachable. Status Code: {response.status_code}"
                 }
             
-            # Content Type Check
             content_type = response.headers.get("Content-Type", "").lower()
             if "text/html" not in content_type:
                 logger.warning(f"Invalid Content-Type for {url}: {content_type}")

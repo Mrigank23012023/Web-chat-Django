@@ -3,11 +3,9 @@ from backend.validator import Validator
 import os
 
 class UI:
-    """Handles frontend UI components and state management."""
     
     @staticmethod
     def load_css():
-        """Loads custom CSS."""
         css_file = "frontend/style.css"
         if os.path.exists(css_file):
             with open(css_file) as f:
@@ -15,7 +13,6 @@ class UI:
 
     @staticmethod
     def init_state():
-        """Initialize session state variables if they don't exist."""
         if "indexed" not in st.session_state:
             st.session_state.indexed = False
         if "vectorstore" not in st.session_state:
@@ -29,8 +26,6 @@ class UI:
 
     @staticmethod
     def render_login(auth_handler):
-        """Renders the login screen with a centered form."""
-        # Using columns to center the login form comfortably
         st.markdown("<br><br>", unsafe_allow_html=True)
         col1, col2, col3 = st.columns([1, 2, 1])
         
@@ -48,7 +43,7 @@ class UI:
             with st.form("login_form", clear_on_submit=True):
                 username = st.text_input("Username")
                 password = st.text_input("Password", type="password")
-                st.markdown("div", unsafe_allow_html=True) # Spacer
+                st.markdown("div", unsafe_allow_html=True) 
                 submitted = st.form_submit_button("Sign In", type="primary", use_container_width=True)
                 
                 if submitted:
@@ -69,7 +64,6 @@ class UI:
 
     @staticmethod
     def render_sidebar(auth_handler):
-        """Renders the sidebar with session controls."""
         with st.sidebar:
             st.markdown("### ⚙️ Workspace")
             if st.session_state.get("username"):
@@ -88,7 +82,6 @@ class UI:
 
     @staticmethod
     def render_header():
-        """Renders the application header."""
         st.markdown("# 🧠 Knowledge Agent")
         st.markdown(
             """
@@ -101,14 +94,9 @@ class UI:
 
     @staticmethod
     def render_input_section():
-        """
-        Renders the URL input and Index button.
-        Returns the URL if indexing is triggered, else None.
-        """
         with st.container():
             col1, col2 = st.columns([3, 1])
             with col1:
-                # Use session state key to persist input
                 url = st.text_input("Target Website URL", placeholder="https://example.com/docs", key="url_input", label_visibility="collapsed")
             
             with col2:
@@ -126,7 +114,6 @@ class UI:
                     
                     return url
             
-            # Show active indexed status with a cleaner look
             if st.session_state.get("indexed") and st.session_state.get("current_url"):
                 st.markdown(
                     f"""
@@ -142,25 +129,20 @@ class UI:
 
     @staticmethod
     def render_chat_interface():
-        """Renders the chat history and input area."""
         st.divider()
         
-        # Display chat history
         for message in st.session_state.messages:
             role = message["role"]
             avatar = "👤" if role == "user" else "🤖"
             with st.chat_message(role, avatar=avatar):
                 st.markdown(message["content"])
 
-        # Chat Input
         if st.session_state.indexed:
             if prompt := st.chat_input("Ask a specific question about the content..."):
-                # Add user message to history
                 st.session_state.messages.append({"role": "user", "content": prompt})
                 with st.chat_message("user", avatar="👤"):
                     st.markdown(prompt)
                 
-                # Placeholder for bot response (mock)
                 with st.chat_message("assistant", avatar="🤖"):
                     st.markdown("Processing query...")
                     
