@@ -29,6 +29,7 @@ class Config:
     CHUNK_SIZE = 1000
     CHUNK_OVERLAP = 150
     
+    EMBEDDING_PROVIDER = "huggingface"
     EMBEDDING_MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
     
     RETRIEVAL_TOP_K = 4
