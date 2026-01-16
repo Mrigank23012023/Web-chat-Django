@@ -13,18 +13,42 @@ class Extractor:
             return None
             
         try:
+            # Try Trafilatura first
             data = trafilatura.bare_extraction(
                 html_content, 
                 include_comments=False, 
                 include_tables=True
             )
             
-            if not data or not data.get('text'):
-                logger.warning("Extraction returned empty data.")
-                return None
+            text = None
+            title = "Unknown Title"
             
-            text = data['text']
-            title = data.get('title', 'Unknown Title')
+            if data and data.get('text'):
+                text = data['text']
+                title = data.get('title', 'Unknown Title')
+            
+            # Fallback to BeautifulSoup if Trafilatura failed
+            if not text:
+                logger.warning("Trafilatura failed/empty. using BeautifulSoup fallback.")
+                try:
+                    from bs4 import BeautifulSoup
+                    soup = BeautifulSoup(html_content, 'html.parser')
+                    
+                    # Remove unwanted tags
+                    for tag in soup(["script", "style", "nav", "footer", "header", "meta", "noscript", "svg", "button"]):
+                        tag.decompose()
+                        
+                    title = soup.title.string.strip() if soup.title and soup.title.string else "Unknown Title"
+                    
+                    # Get text
+                    text = soup.get_text(separator='\n\n')
+                except Exception as e:
+                    logger.error(f"BS4 Fallback failed: {e}")
+                    return None
+            
+            if not text:
+                logger.warning("Extraction returned empty data after fallback.")
+                return None
             
             text = text.replace('\xa0', ' ')
             text = re.sub(r'\n{3,}', '\n\n', text)

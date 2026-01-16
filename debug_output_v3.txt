@@ -1,0 +1,17 @@
+2026-01-16 23:15:47,400 - chat.backend.crawler - INFO - Starting crawl for https://en.wikipedia.org/wiki/Ratan_Tata with limit 1
+2026-01-16 23:15:47,909 - chat.backend.crawler - INFO - Fetching: https://en.wikipedia.org/wiki/Ratan_Tata
+2026-01-16 23:15:50,182 - chat.backend.crawler - INFO - Crawl complete. Visited 1 pages.
+2026-01-16 23:15:52,245 - chat.backend.extractor - INFO - Extraction successful. Size: 45823 chars (Ratio: 0.09)
+2026-01-16 23:15:52,250 - chat.backend.chunker - INFO - Split text into 60 chunks for https://en.wikipedia.org/wiki/Ratan_Tata.
+--- DEPENDENCY CHECK ---
+Trafilatura Version: 1.8.0
+LXML Version: (5, 4, 0, 0)
+lxml_html_clean module found.
+
+--- STARTING PIPELINE ---
+Debugging https://en.wikipedia.org/wiki/Ratan_Tata...
+Crawled 1 pages.
+Extracting https://en.wikipedia.org/wiki/Ratan_Tata (488924 bytes)...
+Success! Text length: 45823
+Cleaned length: 45823
+Chunks generated: 60

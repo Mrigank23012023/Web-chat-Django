@@ -41,7 +41,7 @@ except Exception as e:
     print(f"Import Error: {e}")
     sys.exit(1)
 
-TEST_URL = "https://www.python.org/"
+TEST_URL = "https://en.wikipedia.org/wiki/Ratan_Tata"
 
 def debug_indexing():
     print(f"Debugging {TEST_URL}...")
