@@ -29,4 +29,5 @@ numpy<2.0.0
 # Production
 gunicorn
 whitenoise
-# touch
+dj-database-url
+psycopg2-binary
