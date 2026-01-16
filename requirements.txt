@@ -1,5 +1,28 @@
 # Core Framework
 streamlit>=1.39.0
+# Web Crawling & Parsing
+requests>=2.31.0
+beautifulsoup4>=4.12.3
+trafilatura>=1.8.0
+lxml_html_clean
+
+# LLM & AI Framework (RAG Pipeline)
+langchain>=0.2.0
+langchain-community>=0.2.0
+langchain-core>=0.2.0
+langchain-text_splitters>=0.2.0
+langchain-groq>=0.1.0
+groq>=0.5.0
+
+# Embeddings & Vector Store
+pinecone-client
+langchain-pinecone
+
+# Utilities
+python-dotenv
+tiktoken
+protobuf
+
 
 
 
