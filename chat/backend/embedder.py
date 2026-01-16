@@ -1,6 +1,6 @@
 import logging
 from langchain_community.embeddings import HuggingFaceEmbeddings
-from config import Config
+from chat.config import Config
 import logging
 
 logger = logging.getLogger(__name__)

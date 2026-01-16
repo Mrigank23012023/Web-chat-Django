@@ -5,16 +5,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 def get_secret(key, default=None):
-    import sys
-    value = os.getenv(key, default)
-    if 'streamlit' in sys.modules:
-        try:
-            import streamlit as st
-            if hasattr(st, 'secrets') and key in st.secrets:
-                value = st.secrets[key]
-        except:
-            pass
-    return value
+    return os.getenv(key, default)
 
 class Config:
     """Central configuration for the application."""

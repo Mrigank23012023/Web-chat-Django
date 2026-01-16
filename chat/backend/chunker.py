@@ -2,7 +2,7 @@ import logging
 from typing import List, Dict, Any
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_core.documents import Document
-from config import Config
+from chat.config import Config
 
 logger = logging.getLogger(__name__)
 

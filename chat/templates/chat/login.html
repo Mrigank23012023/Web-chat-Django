@@ -1,0 +1,27 @@
+{% extends 'chat/base.html' %}
+
+{% block content %}
+<div class="login-container">
+    <div class="login-box">
+        <h2 style="color: var(--primary-orange);">🔐 Agentic Access</h2>
+        <p style="color: var(--text-gray); margin-bottom: 2rem;">Please verify your identity to continue.</p>
+
+        <form method="post">
+            {% csrf_token %}
+            <!-- Django Form errors would go here -->
+            {% if form.errors %}
+            <div style="color: red; margin-bottom: 1rem;">Invalid credentials</div>
+            {% endif %}
+
+            <div style="text-align: left; margin-bottom: 0.5rem; font-size: 0.9rem; font-weight: 500;">Username</div>
+            <input type="text" name="username" required>
+
+            <div style="text-align: left; margin-bottom: 0.5rem; font-size: 0.9rem; font-weight: 500;">Password</div>
+            <input type="password" name="password" required>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Sign In</button>
+        </form>
+        <div style="margin-top: 2rem; color: #94a3b8; font-size: 0.8rem;">Demo Access: admin / password</div>
+    </div>
+</div>
+{% endblock %}

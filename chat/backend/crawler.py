@@ -4,7 +4,7 @@ from typing import List, Dict, Set
 import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin, urlparse
-from config import Config
+from chat.config import Config
 from collections import deque
 
 logger = logging.getLogger(__name__)

@@ -6,7 +6,7 @@ from langchain_community.vectorstores import Chroma
 from langchain_pinecone import PineconeVectorStore
 from langchain_core.documents import Document
 from pinecone import Pinecone
-from config import Config
+from chat.config import Config
 
 logger = logging.getLogger(__name__)
 

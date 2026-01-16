@@ -18,7 +18,7 @@ class Validator:
             return {"valid": False, "error": "Malformed URL."}
 
         try:
-            from config import Config
+            from chat.config import Config
             import requests
 
             headers = {"User-Agent": Config.USER_AGENT}

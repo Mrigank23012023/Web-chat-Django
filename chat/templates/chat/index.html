@@ -1,0 +1,86 @@
+{% extends 'chat/base.html' %}
+
+{% block content %}
+<div class="app-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div>
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 2rem;">
+                <span style="font-size: 1.5rem;">⚙️</span>
+                <h3 style="margin: 0;">Workspace</h3>
+            </div>
+            <div style="color: var(--text-gray); font-size: 0.9rem; margin-bottom: 2rem;">
+                Logged in as {{ user.username }}
+            </div>
+
+            <a href="{% url 'clear_chat' %}" class="btn btn-secondary"
+                style="width: 100%; box-sizing: border-box; text-align: center; margin-bottom: 1rem;">
+                New Chat / Clear
+            </a>
+        </div>
+
+        <div>
+            <a href="{% url 'logout' %}" class="btn btn-secondary"
+                style="width: 100%; box-sizing: border-box; text-align: center;">
+                Sign Out
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div style="max-width: 900px; margin: 0 auto; width: 100%;">
+
+            <!-- Header -->
+            <div style="margin-bottom: 3rem; text-align: left;">
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                    <span style="font-size: 3rem;">🧠</span>
+                    <h1 style="font-size: 2.5rem; margin: 0;">Knowledge Agent</h1>
+                </div>
+                <p style="color: var(--text-gray); font-size: 1.1rem;">
+                    Empower your research. Index any website URL to extract insights and chat with its content
+                    instantly.
+                </p>
+            </div>
+
+            <!-- URL Input -->
+            <div style="display: flex; gap: 1rem; margin-bottom: 2rem;">
+                <input type="url" id="urlInput" placeholder="https://example.com/docs" style="margin-bottom: 0;">
+                <button onclick="indexUrl()" class="btn btn-primary" style="white-space: nowrap;">
+                    Index Content
+                </button>
+            </div>
+
+            <div id="statusMessage" style="margin-bottom: 1rem; display: none;"></div>
+
+            <!-- Chat Area -->
+            <div id="chatContainer" class="chat-container">
+                <div id="messagesArea" class="messages-area">
+                    <!-- Messages will appear here -->
+                    {% for message in request.session.messages %}
+                    <div class="message {{ message.role }}">
+                        <div class="avatar">
+                            {% if message.role == 'user' %}🧑‍💻{% else %}🤖{% endif %}
+                        </div>
+                        <div class="content">
+                            {{ message.content|safe }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="input-area">
+                    <input type="text" id="chatInput" placeholder="Ask a question about the website..."
+                        style="margin-bottom: 0; border: none; box-shadow: none;" onkeypress="handleKeyPress(event)">
+                    <button onclick="sendMessage()" class="btn btn-secondary" style="padding: 0.5rem;">
+                        ⬆️
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% csrf_token %}
+{% endblock %}

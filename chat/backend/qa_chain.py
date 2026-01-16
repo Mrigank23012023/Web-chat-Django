@@ -1,14 +1,13 @@
-import logging
-from langchain_groq import ChatGroq
-from langchain.chains.question_answering import load_qa_chain
-from langchain.prompts import PromptTemplate
-from config import Config
-
-logger = logging.getLogger(__name__)
-
 class QAChain:
     
     def __init__(self, vectorstore_retriever):
+        import logging
+        from langchain_groq import ChatGroq
+        from langchain.chains.question_answering import load_qa_chain
+        from langchain.prompts import PromptTemplate
+        from chat.config import Config
+        
+        self.logger = logging.getLogger(__name__)
         self.retriever = vectorstore_retriever
         
         self.llm = ChatGroq(
@@ -40,7 +39,7 @@ Answer:"""
         )
     
     def answer(self, query: str, chat_history: str = ""):
-        logger.info(f"Generating answer for query: {query}")
+        self.logger.info(f"Generating answer for query: {query}")
         try:
             if hasattr(self.retriever, 'invoke'):
                 docs = self.retriever.invoke(query)
@@ -48,7 +47,7 @@ Answer:"""
                 docs = self.retriever.get_relevant_documents(query)
             
             if not docs:
-                logger.warning(f"No relevant documents found for: {query}")
+                self.logger.warning(f"No relevant documents found for: {query}")
                 return {
                     "answer": "The answer is not available on the provided website.",
                     "sources": []
@@ -69,7 +68,7 @@ Answer:"""
             }
             
         except Exception as e:
-            logger.error(f"Error executing QA chain: {e}", exc_info=True)
+            self.logger.error(f"Error executing QA chain: {e}", exc_info=True)
             return {
                 "answer": f"An error occurred: {str(e)}",
                 "sources": []
