@@ -4,7 +4,6 @@ django>=5.0.0
 requests>=2.31.0
 beautifulsoup4>=4.12.3
 trafilatura>=1.8.0
-lxml_html_clean
 
 # LLM & AI Framework (RAG Pipeline)
 langchain>=0.2.0
