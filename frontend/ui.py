@@ -43,7 +43,7 @@ class UI:
             with st.form("login_form", clear_on_submit=True):
                 username = st.text_input("Username")
                 password = st.text_input("Password", type="password")
-                st.markdown("div", unsafe_allow_html=True) 
+
                 submitted = st.form_submit_button("Sign In", type="primary", use_container_width=True)
                 
                 if submitted:
