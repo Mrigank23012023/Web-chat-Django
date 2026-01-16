@@ -2,7 +2,6 @@
 
 {% block content %}
 <div class="app-container">
-    <!-- Sidebar -->
     <div class="sidebar">
         <div>
             <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 2rem;">
@@ -27,11 +26,9 @@
         </div>
     </div>
 
-    <!-- Main Content -->
     <div class="main-content">
         <div style="max-width: 900px; margin: 0 auto; width: 100%;">
 
-            <!-- Header -->
             <div style="margin-bottom: 3rem; text-align: left;">
                 <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
                     <span style="font-size: 3rem;">🧠</span>
@@ -43,7 +40,6 @@
                 </p>
             </div>
 
-            <!-- URL Input -->
             <div style="display: flex; gap: 1rem; margin-bottom: 2rem;">
                 <input type="url" id="urlInput" placeholder="https://example.com/docs" style="margin-bottom: 0;">
                 <button onclick="indexUrl()" class="btn btn-primary" style="white-space: nowrap;">
@@ -53,10 +49,8 @@
 
             <div id="statusMessage" style="margin-bottom: 1rem; display: none;"></div>
 
-            <!-- Chat Area -->
             <div id="chatContainer" class="chat-container">
                 <div id="messagesArea" class="messages-area">
-                    <!-- Messages will appear here -->
                     {% for message in request.session.messages %}
                     <div class="message {{ message.role }}">
                         <div class="avatar">

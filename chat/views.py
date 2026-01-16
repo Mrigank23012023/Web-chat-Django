@@ -7,12 +7,6 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.cache import never_cache
 from .config import Config
 
-# Backend imports
-from .backend.crawler import Crawler
-from .backend.extractor import Extractor
-from .backend.cleaner import Cleaner
-from .backend.chunker import Chunker
-from .backend.vectorstore import VectorStore
 from .backend.qa_chain import QAChain
 from .backend.embedder import Embedder
 
@@ -48,8 +42,6 @@ def clear_chat(request):
     request.session['messages'] = []
     return redirect('index')
 
-# API Endpoints
-
 @login_required
 def api_index(request):
     if request.method == 'POST':
@@ -60,7 +52,6 @@ def api_index(request):
             if not url_to_index:
                 return JsonResponse({'success': False, 'error': 'No URL provided'})
 
-            # Implement Indexing Logic
             crawler = Crawler()
             crawled_pages = crawler.crawl(url_to_index)
             
@@ -87,11 +78,9 @@ def api_index(request):
             embedder = Embedder()
             embedding_function = embedder.get_embedding_function()
             
-            vs_wrapper = VectorStore(collection_name="website_content") # Simplified for single user/session demo
+            vs_wrapper = VectorStore(collection_name="website_content")
             vectorstore = vs_wrapper.create_collection(all_chunks, embedding_function)
             
-            # Persist vectorstore info in session if needed, 
-            # but since VectorStore is persistent (Chroma/Pinecone), we just need to know it's ready.
             request.session['indexed_url'] = url_to_index
             
             return JsonResponse({'success': True, 'chunks_count': len(all_chunks)})
@@ -108,34 +97,15 @@ def api_chat(request):
             data = json.loads(request.body)
             user_message = data.get('message')
             
-            # Save user message
             messages = request.session.get('messages', [])
             messages.append({"role": "user", "content": user_message})
             request.session['messages'] = messages
             
-            # RAG Logic
             try:
                 embedder = Embedder()
                 embedding_function = embedder.get_embedding_function()
                 vs_wrapper = VectorStore(collection_name="website_content")
                 
-                # We need to get the existing vectorstore. 
-                # VectorStore wrapper creates/resets in create_collection.
-                # We need a way to LOAD it.
-                # In Streamlit, it was passed around.
-                # Here, we instantiate it again. 
-                # Ideally, we should check if it exists.
-                # For Chroma, VectorStore(collection_name).as_retriever(...) should work if persisted.
-                
-                # Temporary fix: Assume it exists if we are chatting.
-                # But VectorStore class initialization logic in original code assumes creation?
-                # Let's check VectorStore code again.
-                # It initializes client.
-                # But it doesn't have a "load" method explicit.
-                # But as_retriever takes a 'vectorstore' object returned by create_collection.
-                # We need to get that object WITHOUT creating it again.
-                
-                # For Chroma:
                 if Config.VECTOR_STORE_PROVIDER == "chroma":
                     from langchain_community.vectorstores import Chroma
                     vectorstore = Chroma(
@@ -143,7 +113,6 @@ def api_chat(request):
                         embedding_function=embedding_function,
                         collection_name="website_content"
                     )
-                # For Pinecone:
                 elif Config.VECTOR_STORE_PROVIDER == "pinecone":
                     from langchain_pinecone import PineconeVectorStore
                     if Config.PINECONE_API_KEY:
@@ -158,7 +127,6 @@ def api_chat(request):
                 retriever = vs_wrapper.as_retriever(vectorstore)
                 qa_chain = QAChain(retriever)
                 
-                # Chat History for Context
                 history_window = messages[-5:]
                 chat_history_str = ""
                 for msg in history_window:
@@ -170,9 +138,6 @@ def api_chat(request):
                 answer_text = result['answer']
                 sources = [{"source": doc.metadata.get('source'), "title": doc.metadata.get('title')} for doc in result['sources']]
                 
-                # Save assistant message
-                # Formatting sources in HTML is done in JS for display, but here we save raw text?
-                # Or we can save HTML. Let's save plain text for now.
                 messages.append({"role": "assistant", "content": answer_text})
                 request.session['messages'] = messages
                 request.session.modified = True

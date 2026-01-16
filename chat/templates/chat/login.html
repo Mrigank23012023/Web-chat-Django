@@ -8,7 +8,6 @@
 
         <form method="post">
             {% csrf_token %}
-            <!-- Django Form errors would go here -->
             {% if form.errors %}
             <div style="color: red; margin-bottom: 1rem;">Invalid credentials</div>
             {% endif %}

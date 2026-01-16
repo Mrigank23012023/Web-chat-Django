@@ -21,7 +21,6 @@ class VectorStore:
         if self.provider == "chroma":
             self.persist_directory = Config.CHROMA_DB_PATH
             try:
-                # Initialize client explicitly for better control
                 self.client = chromadb.PersistentClient(path=self.persist_directory)
             except Exception as e:
                 logger.error(f"Failed to initialize ChromaDB client: {e}")
@@ -40,7 +39,6 @@ class VectorStore:
                     self.client.delete_collection(name=self.collection_name)
                     logger.info(f"Deleted existing Chroma collection '{self.collection_name}'.")
                 except ValueError:
-                    # Collection might not exist, which is fine
                     pass 
                     
             elif self.provider == "pinecone":

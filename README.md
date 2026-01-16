@@ -1,105 +1,122 @@
-# 🧠 AI-Powered Website Chatbot (RAG Agent)
+# 🧠 AI-Powered Knowledge Agent (Django RAG)
 
 ## 📖 Project Overview
-This project is an **Agentic RAG (Retrieval-Augmented Generation) Application** that allows users to chat with any website. It autonomously crawls, extracts, indexes, and retrieves information from a target URL to answer user queries with high accuracy. 
+This project is an **Agentic RAG (Retrieval-Augmented Generation) Application** migrated from Streamlit to **Django**. It allows users to chat with the content of any website by providing a URL. The system autonomously crawls, extracts, indexes, and retrieves information to answer queries with high contextual accuracy.
 
-The application is built with a focus on **modularity, speed, and deployment stability**, supporting both local and cloud environments (Streamlit Cloud).
+The application features a premium dark/vibrant UI, secure session-based authentication, and a high-performance RAG pipeline.
+
+---
 
 ## 🏗️ Architecture Explanation
-The system follows a modular pipeline architecture:
+The application follows a robust MVT (Model-View-Template) architecture optimized for RAG operations:
 
-1.  **User Interface (Frontend)**: Built with **Streamlit**, providing a clean, responsive chat interface with sidebar controls and authentication.
-2.  **Ingestion Pipeline**:
-    *   **Crawler**: Uses `requests` and `BeautifulSoup` to crawl pages (BFS strategy).
-    *   **Extractor**: Uses `trafilatura` to extract clean main text from HTML, discarding boilerplate.
-    *   **Chunker**: Splits text into semantic chunks using `RecursiveCharacterTextSplitter` with overlap to preserve context.
-3.  **Vector Storage & Embedding**:
-    *   **Embedder**: Generates 384-dimensional vectors using `sentence-transformers/all-MiniLM-L6-v2`.
-    *   **Vector Database**: Supports a **Hybrid Architecture** (configurable via environment variables):
-        *   **Pinecone**: For production and cloud deployment (persistent, scalable).
-        *   **ChromaDB**: For local development (requires SQLite).
-4.  **Retrieval & Generation**:
-    *   **Retriever**: Fetches the top-k most relevant chunks based on semantic similarity.
-    *   **LLM Chain**: Uses **LangChain** to construct a prompt with context and history, sending it to the **Groq API**.
+1.  **Frontend (Templates & Static)**:
+    *   **Django Templates**: `index.html` (Chat Dashboard), `login.html` (Secure Auth).
+    *   **Vanilla CSS/JS**: Custom designed with glassmorphism, micro-animations, and real-time loading indicators for indexing and chatting.
+
+2.  **Django Backend**:
+    *   **Views & Routing**: Handles authentication, session management, and API endpoints for indexing and chat.
+    *   **Session State**: Tracks chat history and indexing status per user.
+
+3.  **Ingestion Pipeline**:
+    *   **Crawler**: Multi-page BFS crawling using `requests` and `BeautifulSoup`.
+    *   **Extractor**: Clean content retrieval via `trafilatura`.
+    *   **Chunker**: Semantic splitting using LangChain's `RecursiveCharacterTextSplitter`.
+
+4.  **Vector Store & RAG**:
+    *   **Embedder**: Local `all-MiniLM-L6-v2` embeddings (cached for sub-second latency).
+    *   **Vector DB**: Dual-support for **ChromaDB** (local persistence) and **Pinecone** (cloud production).
+    *   **QA Chain**: LangChain `load_qa_chain` using Groq's high-speed inference.
+
+---
 
 ## 🛠️ Frameworks & Libraries
-*   **LangChain**: The backbone for the RAG pipeline, chain orchestration, and vector store abstractions.
-*   **Streamlit**: For the interactive web application and session state management.
-*   **BeautifulSoup4 / Trafilatura**: For robust web scraping and content extraction.
-*   **Sentence-Transformers**: For generating high-quality text embeddings locally.
-*   **PySQLite3-Binary**: To ensure database compatibility on modern cloud environments (Streamlit Cloud/Linux).
+*   **Django**: Core web framework for security, routing, and session management.
+*   **LangChain**: Orchestrates the RAG pipeline and vector database integrations.
+*   **Groq SDK**: Provides ultra-fast LLM inference.
+*   **Sentence-Transformers**: Used for local embedding generation.
+*   **ChromaDB / Pinecone**: Production-grade vector storage solutions.
+*   **BeautifulSoup4 / Trafilatura**: Web scraping and text extraction.
 
-## 🤖 LLM Model Used
-**Model**: `llama-3.3-70b-versatile` (via **Groq**)
+---
+
+## 🤖 LLM Model
+**Model**: `llama-3.3-70b-versatile` (via **Groq API**)
 
 **Why this choice?**
-*   **Speed**: Groq's LPU inference engine provides near-instant responses, which is critical for a smooth chat experience.
-*   **Performance**: The Llama 3.3 70B model offers state-of-the-art reasoning capabilities comparable to GPT-4, ensuring accurate and nuanced answers from the retrieve context.
-*   **Cost**: Efficient and often cost-effective for high-throughput applications.
+*   **Ultra-Low Latency**: Groq's LPU engine provides near-instant tokens-per-second, making the chat feel fluid.
+*   **High Intelligence**: Llama 3.3 70B provides reasoning capabilities matching GPT-4 class models, essential for accurate information retrieval.
 
-## 🗄️ Vector Database Strategy
-**Primary**: **Pinecone** (Serverless)
+---
 
-**Why?**
-*   **Cloud Native**: Essential for deployment on ephemeral environments like Streamlit Cloud where local files are lost on restart.
-*   **Performance**: Extremely fast vector search at scale.
+## 🗄️ Vector Database
+**Provider**: **ChromaDB** (Default) / **Pinecone** (Optional)
 
-**Secondary**: **ChromaDB** (Local)
-*   Used for local testing to avoid API latency during development.
-* 
+**Why Chroma?**
+*   Provides a zero-config, persistent local database that works offline and is perfect for rapid development and private data hosting.
+
+**Why Pinecone?**
+*   Used for larger scale deployments where a managed serverless vector store is required for high availability.
+
+---
 
 ## 🔢 Embedding Strategy
-**Model**: `sentence-transformers/all-MiniLM-L6-v2`
-*   **Dimensions**: 384
-*   We use a local embedding model (HuggingFace) rather than an API-based one. This reduces latency and cost for the ingestion phase, as we don't need to pay per token for embedding thousands of document chunks.
+**Strategy**: Local HuggingFace Embeddings (`all-MiniLM-L6-v2`)
+*   **Efficiency**: Running embeddings locally eliminates API costs and reduces network latency during the ingestion phase.
+*   **Performance**: 384-dimensional vectors provide a perfect balance between search accuracy and computation speed.
+*   **Optimization**: Models are pre-downloaded and cached on the first run for instant subsequent starts.
+
+---
 
 ## 🚀 Setup and Run Instructions
 
 ### Prerequisites
-*   Python 3.10+
-*   Git
+*   Python 3.11+
+*   Groq API Key (and optionally Pinecone API Key)
 
-### 1. Clone the Repository
-```bash
-git clone https://github.com/Mrigank23012023/Web-Chat.git
+### 1. Installation
+```powershell
+git clone https://github.com/Mrigank23012023/Web-chat-Django.git
 cd Web-Chat
-```
-
-### 2. Install Dependencies
-```bash
-python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+python -m venv .venv_py311
+.venv_py311\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### 3. Configure Environment
-Create a `.env` file or set specific Secrets in Streamlit Cloud:
-
-```ini
-GROQ_API_KEY=gsk_...
-PINECONE_API_KEY=pc_...
-VECTOR_STORE_PROVIDER=pinecone   # Options: pinecone, chroma
+### 2. Configuration
+Create a `.env` file in the root directory:
+```env
+GROQ_API_KEY=your_groq_key_here
+VECTOR_STORE_PROVIDER=chroma # or pinecone
+PINECONE_API_KEY=your_pinecone_key_here # if using pinecone
 ```
 
-*Note: For Pinecone, create an index named `website-content` with dimensions **384** and metric **cosine**.*
-
-### 4. Run the Application
-```bash
-streamlit run app.py
+### 3. Database & Auth
+```powershell
+python manage.py migrate
+# Use existing admin / password or create new
+python manage.py createsuperuser
 ```
 
-## ⚠️ Assumptions, Limitations, and Future Improvements
+### 4. Run
+```powershell
+run_server_django.bat
+```
+App will be available at: `http://127.0.0.1:8000/`
+
+---
+
+## ⚠️ Assumptions & Limitations
 
 ### Assumptions
-*   The target website allows crawling (robots.txt is respected but basic headers are used).
-*   The content is primarily English text.
+*   **Content Type**: Assumes the target URL contains indexable HTML text.
+*   **Language**: Optimized for English-language websites.
 
 ### Limitations
-*   **Dynamic Content**: Websites heavily reliant on JavaScript (SPA) might not be fully indexed strictly by the `requests` crawler.
-*   **Crawling Depth**: Limited to 5 pages by default to prevent timeouts (configurable in `config.py`).
-*   **Session Persistence**: Chat history is stored in RAM (session state) and is lost on refresh.
+*   **JS-Heavy Sites**: Basic crawler may miss content on sites that require heavy JavaScript execution (e.g., React SPAs).
+*   **Storage**: Free-tier ChromaDB is local to the machine; data is not shared between different deployment instances unless using Pinecone.
 
 ### Future Improvements
-*   **Headless Browser**: Integrate `Selenium` or `Playwright` for crawling dynamic JS-heavy sites.
-*   **Multi-User DB**: Upgrade to storing chat history in a persistent database (PostgreSQL/Firebase).
-*   **File Uploads**: Add support for PDF/Docx indexing alongside URLs.
+*   **Browser-Based Crawling**: Integrate Playwright/Selenium for indexing dynamic SPAs.
+*   **Multi-Agent Mode**: Use LangGraph to implement self-correcting retrieval steps.
+*   **Advanced Auth**: Full user registration and OAuth (Google/GitHub) integration.

@@ -91,7 +91,6 @@ async function sendMessage() {
     appendMessage('user', message);
     chatInput.value = '';
 
-    // Show typing generic/spinner
     const loadingMsg = createTypingIndicator();
     messagesArea.appendChild(loadingMsg);
     messagesArea.scrollTop = messagesArea.scrollHeight;
@@ -108,7 +107,6 @@ async function sendMessage() {
 
         const data = await response.json();
 
-        // Remove loading message
         messagesArea.removeChild(loadingMsg);
 
         if (data.answer) {

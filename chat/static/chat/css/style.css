@@ -23,7 +23,7 @@ body {
     height: 100%;
 }
 
-/* Layout */
+
 .app-container {
     display: flex;
     height: 100vh;
@@ -48,7 +48,7 @@ body {
     flex-direction: column;
 }
 
-/* Typography */
+
 h1,
 h2,
 h3 {
@@ -62,7 +62,7 @@ h1 {
     font-size: 2rem;
 }
 
-/* Forms & Inputs */
+
 input[type="text"],
 input[type="password"],
 input[type="url"] {
@@ -84,7 +84,7 @@ input:focus {
     box-shadow: 0 0 0 2px rgba(255, 30, 0, 0.2);
 }
 
-/* Buttons */
+
 .btn {
     cursor: pointer;
     border: none;
@@ -120,7 +120,7 @@ input:focus {
     color: var(--primary-orange);
 }
 
-/* Chat Interface */
+
 .chat-container {
     flex: 1;
     display: flex;
@@ -163,7 +163,7 @@ input:focus {
     gap: 1rem;
 }
 
-/* Login - specific */
+
 .login-container {
     display: flex;
     justify-content: center;
@@ -180,7 +180,7 @@ input:focus {
     text-align: center;
 }
 
-/* Loading Spinner */
+
 .loader {
     border: 3px solid #f3f3f3;
     border-radius: 50%;
@@ -205,7 +205,7 @@ input:focus {
     }
 }
 
-/* Typing Indicator */
+
 .typing-indicator {
     display: flex;
     gap: 4px;

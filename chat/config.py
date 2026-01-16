@@ -1,7 +1,6 @@
 import os
 from dotenv import load_dotenv
 
-# Load environment variables
 load_dotenv()
 
 def get_secret(key, default=None):
@@ -25,15 +24,12 @@ class Config:
     
     RETRIEVAL_TOP_K = 4
     
-    # LLM Config (Groq)
     GROQ_API_KEY = get_secret("GROQ_API_KEY")
     LLM_MODEL_NAME = "llama-3.3-70b-versatile"
     LLM_BASE_URL = "https://api.groq.com/openai/v1"
     LLM_TEMPERATURE = 0
     
-    # Pinecone/Vector Store Config
     PINECONE_API_KEY = get_secret("PINECONE_API_KEY")
-    # Default to 'chroma' if not set
     VECTOR_STORE_PROVIDER = get_secret("VECTOR_STORE_PROVIDER", "chroma").lower()
     PINECONE_INDEX_NAME = "website-content"
 
@@ -47,5 +43,4 @@ class Config:
             print("⚠️ WARNING: PINECONE_API_KEY is missing but provider is set to 'pinecone'. RAG features will fail.")
         pass
 
-# Validate on import
 Config.validate()
