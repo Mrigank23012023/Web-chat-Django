@@ -3,8 +3,9 @@ class QAChain:
     def __init__(self, vectorstore_retriever):
         import logging
         from langchain_groq import ChatGroq
-        from langchain.chains.question_answering import load_qa_chain
-        from langchain.prompts import PromptTemplate
+        from langchain_core.prompts import PromptTemplate
+        from langchain_core.output_parsers import StrOutputParser
+        from langchain_core.runnables import RunnablePassthrough
         from chat.config import Config
         
         self.logger = logging.getLogger(__name__)
@@ -19,6 +20,7 @@ class QAChain:
         template = """Use the following pieces of context to answer the question at the end. 
 If you don't know the answer, just say 'The answer is not available on the provided website.', don't try to make up an answer.
 
+Context:
 {context}
 
 Current Conversation:
@@ -32,11 +34,8 @@ Answer:"""
             input_variables=["context", "chat_history", "question"]
         )
         
-        self.chain = load_qa_chain(
-            llm=self.llm, 
-            chain_type="stuff", 
-            prompt=self.prompt
-        )
+        # Build chain using LCEL
+        self.chain = self.prompt | self.llm | StrOutputParser()
     
     def answer(self, query: str, chat_history: str = ""):
         self.logger.info(f"Generating answer for query: {query}")
@@ -53,14 +52,15 @@ Answer:"""
                     "sources": []
                 }
             
-            inputs = {"input_documents": docs, "question": query, "chat_history": chat_history}
+            # Format context from documents
+            context = "\n\n".join([doc.page_content for doc in docs])
             
-            if hasattr(self.chain, 'invoke'):
-                response = self.chain.invoke(inputs, return_only_outputs=True)
-                answer_text = response['output_text']
-            else:
-                response = self.chain(inputs, return_only_outputs=True)
-                answer_text = response['output_text']
+            # Invoke chain with formatted inputs
+            answer_text = self.chain.invoke({
+                "context": context,
+                "chat_history": chat_history,
+                "question": query
+            })
             
             return {
                 "answer": answer_text,
