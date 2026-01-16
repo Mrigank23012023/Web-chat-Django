@@ -25,3 +25,7 @@ python-dotenv
 tiktoken
 protobuf
 numpy<2.0.0
+
+# Production
+gunicorn
+whitenoise
