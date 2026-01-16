@@ -24,7 +24,18 @@ async function indexUrl() {
             body: JSON.stringify({ url: url })
         });
 
-        const data = await response.json();
+        if (response.redirected) {
+            window.location.href = '/login/?next=/';
+            return;
+        }
+
+        const text = await response.text();
+        let data;
+        try {
+            data = JSON.parse(text);
+        } catch (e) {
+            throw new Error("Server returned invalid response. You may need to log in again.");
+        }
 
         if (data.success) {
             statusDiv.style.backgroundColor = '#f0fdf4';
@@ -105,7 +116,20 @@ async function sendMessage() {
             body: JSON.stringify({ message: message })
         });
 
-        const data = await response.json();
+        if (response.redirected) {
+            window.location.href = '/login/?next=/';
+            return;
+        }
+
+        const text = await response.text();
+        let data;
+        try {
+            data = JSON.parse(text);
+        } catch (e) {
+            messagesArea.removeChild(loadingMsg);
+            appendMessage('assistant', "Error: Server returned invalid response. You may need to log in again.");
+            return;
+        }
 
         messagesArea.removeChild(loadingMsg);
 

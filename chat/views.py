@@ -60,6 +60,9 @@ def api_index(request):
             crawler = Crawler()
             crawled_pages = crawler.crawl(url_to_index)
             
+            if not crawled_pages:
+                return JsonResponse({'success': False, 'error': 'Could not crawl any pages from the URL. The website might be blocking bot access or the URL is invalid.'})
+
             extractor = Extractor()
             extracted_data = []
             for page in crawled_pages:
@@ -80,6 +83,9 @@ def api_index(request):
                 chunks = chunker.chunk(clean_text, data['url'], data['title'])
                 all_chunks.extend(chunks)
             
+            if not all_chunks:
+                return JsonResponse({'success': False, 'error': 'No text content could be extracted from the website. It might be empty or protected.'})
+
             embedder = Embedder()
             embedding_function = embedder.get_embedding_function()
             

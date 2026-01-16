@@ -1,0 +1,8 @@
+=== Debugging Indexing for https://www.python.org/ ===
+
+--- Step 1: Crawling ---
+Crawled 1 pages.
+Page 1 URL: https://www.python.org/
+Page 1 HTML Length: 48202
+
+--- Step 2: Extraction ---

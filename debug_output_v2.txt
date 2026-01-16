@@ -1,0 +1,17 @@
+2026-01-16 21:20:56,573 - chat.backend.crawler - INFO - Starting crawl for https://www.python.org/ with limit 1
+2026-01-16 21:20:57,075 - chat.backend.crawler - INFO - Fetching: https://www.python.org/
+2026-01-16 21:20:57,928 - chat.backend.crawler - INFO - Crawl complete. Visited 1 pages.
+2026-01-16 21:21:01,250 - chat.backend.extractor - INFO - Extraction successful. Size: 1246 chars (Ratio: 0.03)
+2026-01-16 21:21:01,253 - chat.backend.chunker - INFO - Split text into 2 chunks for https://www.python.org/.
+--- DEPENDENCY CHECK ---
+Trafilatura Version: 1.8.0
+LXML Version: (5, 4, 0, 0)
+lxml_html_clean module found.
+
+--- STARTING PIPELINE ---
+Debugging https://www.python.org/...
+Crawled 1 pages.
+Extracting https://www.python.org/ (48202 bytes)...
+Success! Text length: 1246
+Cleaned length: 1246
+Chunks generated: 2
