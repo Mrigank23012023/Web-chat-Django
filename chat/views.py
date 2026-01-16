@@ -7,6 +7,11 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.cache import never_cache
 from .config import Config
 
+from .backend.crawler import Crawler
+from .backend.extractor import Extractor
+from .backend.cleaner import Cleaner
+from .backend.chunker import Chunker
+from .backend.vectorstore import VectorStore
 from .backend.qa_chain import QAChain
 from .backend.embedder import Embedder
 
