@@ -84,6 +84,19 @@ def api_index(request):
                 all_chunks.extend(chunks)
             
             if not all_chunks:
+                # Diagnostics: Check if extraction failed (Crawling success but no data)
+                if crawled_pages and not extracted_data:
+                    # Provide hint about what was downloaded
+                    import re
+                    first_html_snippet = crawled_pages[0]['html'][:1000]
+                    title_match = re.search(r'<title>(.*?)</title>', first_html_snippet, re.IGNORECASE)
+                    page_title = title_match.group(1).strip() if title_match else "No Title Found"
+                    
+                    return JsonResponse({
+                        'success': False, 
+                        'error': f'Crawling worked ({len(crawled_pages)} pages) but extraction failed. The site might be blocking the bot. Page Title: "{page_title}"'
+                    })
+
                 return JsonResponse({'success': False, 'error': 'No text content could be extracted from the website. It might be empty or protected.'})
 
             embedder = Embedder()

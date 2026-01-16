@@ -16,8 +16,7 @@ class Extractor:
             data = trafilatura.bare_extraction(
                 html_content, 
                 include_comments=False, 
-                include_tables=True,
-                no_fallback=True
+                include_tables=True
             )
             
             if not data or not data.get('text'):
@@ -30,7 +29,7 @@ class Extractor:
             text = text.replace('\xa0', ' ')
             text = re.sub(r'\n{3,}', '\n\n', text)
             
-            if len(text) < 50:
+            if len(text) < 10:
                 logger.warning(f"Extracted content too short ({len(text)} chars). Skipping.")
                 return None
             
