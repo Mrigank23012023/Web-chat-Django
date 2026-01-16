@@ -15,7 +15,8 @@ langchain-groq>=0.1.0
 groq>=0.5.0
 
 # Embeddings & Vector Store
-sentence-transformers>=2.5.1
+huggingface_hub>=0.20.0
+langchain-huggingface
 chromadb>=0.4.24
 pinecone-client
 langchain-pinecone

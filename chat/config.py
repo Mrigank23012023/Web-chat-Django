@@ -21,6 +21,7 @@ class Config:
     
     EMBEDDING_PROVIDER = "huggingface"
     EMBEDDING_MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
+    HUGGINGFACEHUB_API_TOKEN = get_secret("HUGGINGFACEHUB_API_TOKEN")
     
     RETRIEVAL_TOP_K = 4
     

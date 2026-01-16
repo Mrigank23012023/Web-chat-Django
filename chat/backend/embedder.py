@@ -17,8 +17,21 @@ class Embedder:
         
         if self.provider == "huggingface":
             try:
-                embeddings = HuggingFaceEmbeddings(model_name=self.model_name)
-                logger.info(f"HuggingFace embeddings initialized successfully ({self.model_name})")
+                # Use Inference API to avoid loading model in memory (OOM fix for Render)
+                # Switch to langchain_huggingface (newer) to avoid KeyErrors
+                from langchain_huggingface import HuggingFaceEndpointEmbeddings
+                
+                api_key = Config.HUGGINGFACEHUB_API_TOKEN
+                if not api_key:
+                    raise ValueError("HUGGINGFACEHUB_API_TOKEN is missing. Please add it to your environment variables.")
+
+                embeddings = HuggingFaceEndpointEmbeddings(
+                    huggingfacehub_api_token=api_key,
+                    model=self.model_name
+                )
+                logger.info(f"HuggingFace API embeddings initialized successfully ({self.model_name})")
+                return embeddings
+                logger.info(f"HuggingFace API embeddings initialized successfully ({self.model_name})")
                 return embeddings
             except Exception as e:
                 logger.error(f"Failed to initialize HuggingFace embeddings: {e}")
